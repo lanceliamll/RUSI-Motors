@@ -3,11 +3,42 @@ const router = express.Router();
 const Motor = require("../../models/Motor");
 const authorized = require("../../middleware/authorized");
 
-//@ROUTE          here
-//@DESCRIPTION    here
-//@ACCESS         here
-router.get("/", authorized, (req, res) => {
-  res.send("motors");
+//@ROUTE          localhost:5000/api/motors
+//@DESCRIPTION    query all motors
+//@ACCESS         private
+
+router.get("/", authorized, async (req, res) => {
+  try {
+    let motors = await Motor.find();
+
+    if (!motors) {
+      return res.status(404).json({ message: "No motors found" });
+    }
+
+    res.json(motors);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+//@ROUTE          localhost:5000/api/motors/:id
+//@DESCRIPTION    query motor by id
+//@ACCESS         private
+
+router.get("/:id", authorized, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let motor = await Motor.findById(id);
+
+    if (!motor) {
+      return res.status(404).json({ message: "Motor not found" });
+    }
+
+    res.json(motor);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
 });
 
 //@ROUTE          localhost:5000/api/motors/create
@@ -61,6 +92,28 @@ router.put("/edit/:id", authorized, async (req, res) => {
       width
     });
     res.json({ message: "Updated" });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+//@ROUTE          localhost:5000/api/motors/:id
+//@DESCRIPTION    delete a specific motor by id
+//@ACCESS         private
+
+router.delete("/:id", authorized, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let motor = await Motor.findById(id);
+
+    if (!motor) {
+      return res.status(404).json({ message: "Motor not found" });
+    }
+
+    await motor.remove();
+
+    res.json({ message: "Deleted Successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
