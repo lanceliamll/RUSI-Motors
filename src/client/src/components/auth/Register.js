@@ -1,6 +1,8 @@
-import axios from "axios";
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Button, Form } from "react-bootstrap";
+import { connect } from "react-redux";
+import { registerUser } from "../../actions/authActions";
 import "./Auth.css";
 
 class Register extends Component {
@@ -15,6 +17,20 @@ class Register extends Component {
     };
   }
 
+  // componentDidMount() {
+  // const { isAuthenticated } = this.props.auth;
+  //   if (isAuthenticated) {
+  //     return <Redirect to="/profile" />;
+  //   }
+  // }
+
+  //If the component receive error(props). set it automatically
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -23,6 +39,7 @@ class Register extends Component {
     e.preventDefault();
 
     const { username, email, password, password2 } = this.state;
+    const { registerUser } = this.props;
 
     let newUser = {
       username,
@@ -31,22 +48,11 @@ class Register extends Component {
       password2
     };
 
-    axios
-      .post("/api/users/register", newUser)
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(error => {
-        console.log(error.response.data);
-        this.setState({ errors: error.response.data });
-      });
-
-    console.log(newUser);
+    registerUser(newUser);
   };
 
   render() {
     const { username, email, password, password2, errors } = this.state;
-
     return (
       <div className="auth-components">
         <div className="container">
@@ -126,4 +132,18 @@ class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes = {
+  registerUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { registerUser }
+)(Register);
