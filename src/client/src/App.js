@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Footer from "./components/layout/Footer";
@@ -14,13 +14,13 @@ class App extends Component {
           <div className="App">
             <Fragment>
               <Navigation />
-              <Switch>
-                <Route exact path="/" component={Landing} />
-                <div>
-                  <Route exact path="/login" component={Login} />
-                  <Route exact path="/register" component={Register} />
-                </div>
-              </Switch>
+
+              <Route exact path="/" component={Landing} />
+              <div>
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/register" component={Register} />
+              </div>
+
               <Footer />
             </Fragment>
           </div>

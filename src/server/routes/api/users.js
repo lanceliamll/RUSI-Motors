@@ -7,6 +7,11 @@ const { check, validationResult } = require("express-validator");
 const config = require("config");
 const authorized = require("../../middleware/authorized");
 
+//VALIDATION FOR THE REGISTER INPUT
+const validateRegisterInput = require("../../validation/register");
+//VALIDATION FOR THE LOGIN INPUT
+const validateLoginInput = require("../../validation/login");
+
 //@ROUTE          localhost:5000/api/users
 //@DESCRIPTION    get current user
 //@ACCESS         private
@@ -26,142 +31,121 @@ router.get("/", authorized, async (req, res) => {
 //@ROUTE          localhost:5000/api/users/register
 //@DESCRIPTION    register a user
 //@ACCESS         public
-router.post(
-  "/register",
-  [
-    check("username", "Username field is required.")
-      .not()
-      .isEmpty(),
-    check("email", "Email field is required.")
-      .not()
-      .isEmpty(),
-    check("email", "You should input a valid email address").isEmail(),
-    check("password", "Password field is required.")
-      .not()
-      .isEmpty()
-  ],
-  async (req, res) => {
-    const errors = await validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
+router.post("/register", async (req, res) => {
+  //GET THE ERRORS AND ISVALID FROM THE VALIDATE REGISTER INPUT VIA DESTRUCTURING
+  const { errors, isValid } = validateRegisterInput(req.body);
 
-    const { username, password, email } = req.body;
-
-    try {
-      let user = await User.findOne({ username });
-      let userCollection = await User.find();
-
-      if (user) {
-        return res
-          .status(400)
-          .json({ errors: [{ message: "User already exists" }] });
-      } else {
-        //hash password
-        const hashedPassword = await bcrypt.hash(password, 12);
-
-        if (userCollection.length === 0) {
-          user = await new User({
-            username,
-            email,
-            password: hashedPassword,
-            isAdmin: true
-          });
-        } else {
-          user = await new User({
-            username,
-            email,
-            password: hashedPassword
-          });
-        }
-      }
-      await user.save();
-
-      const payload = {
-        user: {
-          id: user.id,
-          isAdmin: user.isAdmin
-        }
-      };
-
-      //Sign JWT
-      jwt.sign(
-        payload,
-        config.get("jwtSecret"),
-        { expiresIn: "1hr" },
-        (err, token) => {
-          if (err) throw err;
-          res.json({
-            token
-          });
-        }
-      );
-    } catch (error) {
-      res.status(500).json({ message: "Server Error" });
-    }
+  //CHECK VALIDATION IF ITS VALID
+  if (!isValid) {
+    return res.status(400).json(errors);
   }
-);
+
+  const { username, password, email } = req.body;
+
+  try {
+    let user = await User.findOne({ username });
+    let userCollection = await User.find();
+
+    if (user) {
+      errors.user = "User already exists";
+      return res.status(400).json(errors);
+    } else {
+      //hash password
+      const hashedPassword = await bcrypt.hash(password, 12);
+
+      if (userCollection.length === 0) {
+        user = await new User({
+          username,
+          email,
+          password: hashedPassword,
+          isAdmin: true
+        });
+      } else {
+        user = await new User({
+          username,
+          email,
+          password: hashedPassword
+        });
+      }
+    }
+    await user.save();
+
+    const payload = {
+      user: {
+        id: user.id,
+        isAdmin: user.isAdmin
+      }
+    };
+
+    //Sign JWT
+    jwt.sign(
+      payload,
+      config.get("jwtSecret"),
+      { expiresIn: "1hr" },
+      (err, token) => {
+        if (err) throw err;
+        res.json({
+          token
+        });
+      }
+    );
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
 
 //@ROUTE          localhost:5000/api/users/login
 //@DESCRIPTION    login a user
 //@ACCESS         public
 
-router.post(
-  "/login",
-  [
-    check("username", "Username field is required.")
-      .not()
-      .isEmpty(),
-    check("password", "Password field is required.")
-      .not()
-      .isEmpty()
-  ],
-  async (req, res) => {
-    const errors = await validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+router.post("/login", async (req, res) => {
+  //GET THE ERRORS AND ISVALID FROM THE VALIDATE LOGIN INPUT VIA DESTRUCTURING
+  const { errors, isValid } = validateLoginInput(req.body);
+
+  //VALIDATION IF NOT VALID
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  const { username, password } = req.body;
+  try {
+    let user = await User.findOne({ username });
+
+    if (!user) {
+      errors.user = "Invalid Credentials";
+      return res.status(404).json(errors);
     }
 
-    const { username, password } = req.body;
-    try {
-      let user = await User.findOne({ username });
+    const isMatch = bcrypt.compare(password, user.password);
 
-      if (!user) {
-        return res
-          .status(404)
-          .json({ errors: [{ message: "Invalid Credentials" }] });
+    if (!isMatch) {
+      errors.user = "Invalid Credentials";
+      return res.status(404).json(errors);
+    }
+
+    const payload = {
+      user: {
+        id: user.id,
+        isAdmin: user.isAdmin
       }
+    };
 
-      const isMatch = bcrypt.compare(password, user.password);
-
-      if (!isMatch) {
-        return res
-          .status(404)
-          .json({ errors: [{ message: "Invalid Credentials" }] });
+    //Sign JWT
+    jwt.sign(
+      payload,
+      config.get("jwtSecret"),
+      { expiresIn: "1hr" },
+      (err, token) => {
+        if (err) throw err;
+        res.json({
+          token
+        });
       }
-
-      const payload = {
-        user: {
-          id: user.id,
-          isAdmin: user.isAdmin
-        }
-      };
-
-      //Sign JWT
-      jwt.sign(
-        payload,
-        config.get("jwtSecret"),
-        { expiresIn: "1hr" },
-        (err, token) => {
-          if (err) throw err;
-          res.json({
-            token
-          });
-        }
-      );
-    } catch (error) {}
+    );
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
   }
-);
+});
 
 module.exports = router;
 
