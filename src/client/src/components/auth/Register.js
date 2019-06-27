@@ -2,7 +2,8 @@ import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Button, Form } from "react-bootstrap";
 import { connect } from "react-redux";
-import { registerUser } from "../../actions/authActions";
+import { Redirect } from "react-router-dom";
+import { loadUser, registerUser } from "../../actions/authActions";
 import "./Auth.css";
 
 class Register extends Component {
@@ -16,13 +17,6 @@ class Register extends Component {
       errors: {}
     };
   }
-
-  // componentDidMount() {
-  // const { isAuthenticated } = this.props.auth;
-  //   if (isAuthenticated) {
-  //     return <Redirect to="/profile" />;
-  //   }
-  // }
 
   //If the component receive error(props). set it automatically
   componentWillReceiveProps(nextProps) {
@@ -52,6 +46,9 @@ class Register extends Component {
   };
 
   render() {
+    if (this.props.auth.isAuthenticated) {
+      return <Redirect to="/" />;
+    }
     const { username, email, password, password2, errors } = this.state;
     return (
       <div className="auth-components">
@@ -134,6 +131,7 @@ class Register extends Component {
 
 Register.propTypes = {
   registerUser: PropTypes.func.isRequired,
+  loadUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -145,5 +143,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { registerUser }
+  { registerUser, loadUser }
 )(Register);

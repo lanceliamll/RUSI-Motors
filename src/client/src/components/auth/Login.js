@@ -1,6 +1,11 @@
+import PropTypes from "prop-types";
 import React, { Component } from "react";
 import { Button, Form } from "react-bootstrap";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+import { loginUser } from "../../actions/authActions";
 import "./Auth.css";
+
 class Login extends Component {
   constructor() {
     super();
@@ -10,6 +15,13 @@ class Login extends Component {
       errors: {}
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -18,15 +30,19 @@ class Login extends Component {
     e.preventDefault();
 
     const { username, password } = this.state;
-
+    const { loginUser } = this.props;
     let login = {
       username,
       password
     };
-    console.log(login);
+    loginUser(login);
   };
+
   render() {
-    const { username, password } = this.state;
+    if (this.props.auth.isAuthenticated) {
+      return <Redirect to="/" />;
+    }
+    const { username, password, errors } = this.state;
     return (
       <div className="auth-components">
         <div className="container">
@@ -38,29 +54,34 @@ class Login extends Component {
                   <Form.Label>Username</Form.Label>
                   <Form.Control
                     type="text"
+                    className={errors.username ? "is-invalid" : ""}
                     placeholder="Enter Username"
                     name="username"
                     value={username}
                     onChange={this.onChange}
                   />
+                  <Form.Text className="text-danger">
+                    {errors && <p>{errors.username}</p>}
+                  </Form.Text>
                 </Form.Group>
 
                 <Form.Group>
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"
+                    className={errors.password ? "is-invalid" : ""}
                     placeholder="Password"
                     name="password"
                     value={password}
                     onChange={this.onChange}
                   />
-                  <Form.Text className="text-muted">
-                    We'll never share your password with anyone else.
+                  <Form.Text className="text-danger">
+                    {errors && <p>{errors.username}</p>}
                   </Form.Text>
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
-                  Submit
+                  Login
                 </Button>
               </Form>
             </div>
@@ -71,4 +92,16 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  errors: state.errors,
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(Login);
