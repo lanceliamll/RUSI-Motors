@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://admin:admin1@rusi-motors-pgzcp.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "thisisasecerwwerwu8123"
+}

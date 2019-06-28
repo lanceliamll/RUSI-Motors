@@ -6,3 +6,15 @@
   color: white;
   text-align: center;
 }
+.header-caption {
+  padding-bottom: 25%;
+}
+
+.header-caption-text {
+  letter-spacing: 15px;
+  font-size: 40px;
+}
+
+.brand-icon {
+  height: 5vh;
+}

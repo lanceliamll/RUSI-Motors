@@ -4,6 +4,7 @@ import { Nav, Navbar } from "react-bootstrap";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
+import Rusi1 from "../../static/Rusi1.png";
 
 class Navigation extends Component {
   logout = () => {
@@ -57,14 +58,17 @@ class Navigation extends Component {
     return (
       <>
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand>Rusi Motors</Navbar.Brand>
+          <Navbar.Brand>
+            <Link to="/">
+              <img src={Rusi1} className="brand-icon" alt="..." />
+            </Link>
+          </Navbar.Brand>
 
           <Nav className="mr-auto">
             <Link className="nav-link" to="/">
               {""}
               Home
             </Link>
-            {/* {isAuthenticated ? adminLinks : guestLinks} */}
             {isAuthenticated ? authLinks : guestLinks}
           </Nav>
         </Navbar>

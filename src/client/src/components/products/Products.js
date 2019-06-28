@@ -10,9 +10,11 @@ class Products extends Component {
   }
 
   render() {
-    const { products } = this.props.product;
-    return (
-      <div>
+    const { products, loading } = this.props.product;
+    return loading && products === [] ? (
+      <Fragment>Loading...</Fragment>
+    ) : (
+      <Fragment>
         <div className="container">
           <h3>Products</h3>
           {products !== [] ? (
@@ -60,7 +62,7 @@ class Products extends Component {
             <p>No Products found</p>
           )}
         </div>
-      </div>
+      </Fragment>
     );
   }
 }
