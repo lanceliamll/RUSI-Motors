@@ -2,15 +2,18 @@ import PropTypes from "prop-types";
 import React, { Component, Fragment } from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
 import Rusi1 from "../../static/Rusi1.png";
 
 class Navigation extends Component {
   logout = () => {
     const { logoutUser } = this.props;
-    logoutUser();
-    return <Redirect to="/" />;
+    const confirmLogout = window.confirm("Are you sure you wanted to logout?");
+    if (confirmLogout) {
+      logoutUser();
+      window.location.reload();
+    }
   };
 
   render() {
@@ -27,14 +30,14 @@ class Navigation extends Component {
 
     const authLinks = (
       <Fragment>
-        {user !== null && isAuthenticated ? adminLinks : null}
+        {user !== null && user.isAdmin ? adminLinks : null}
 
         <Link className="nav-link" to="/Products">
           {""}
           Products
         </Link>
 
-        <a href="#test" className="nav-link" onClick={this.logout}>
+        <a href="/" className="nav-link" onClick={this.logout}>
           {""}
           Logout
         </a>
