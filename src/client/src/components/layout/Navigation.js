@@ -21,7 +21,7 @@ class Navigation extends Component {
 
     const adminLinks = (
       <Fragment>
-        <Link className="nav-link" to="/maintenance">
+        <Link className="nav-link" to="/adminsettings">
           {""}
           Settings
         </Link>

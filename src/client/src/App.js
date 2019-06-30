@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { loadUser } from "./actions/authActions";
+import AdminSettings from "./components/admin/AdminSettings";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import Footer from "./components/layout/Footer";
@@ -36,6 +37,11 @@ class App extends Component {
                 <Route exact path="/register" component={Register} />
                 <Switch>
                   <PrivateRoute exact path="/products" component={Products} />
+                  <PrivateRoute
+                    exact
+                    path="/adminsettings"
+                    component={AdminSettings}
+                  />
                 </Switch>
               </div>
               <Footer />

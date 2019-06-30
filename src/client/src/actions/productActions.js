@@ -1,6 +1,7 @@
 import axios from "axios";
 import {
   CLEAR_PRODUCT,
+  GET_ERRORS,
   GET_PRODUCT,
   GET_PRODUCTS,
   GET_PRODUCTS_FAILED,
@@ -37,6 +38,17 @@ export const getProduct = motorModel => async dispatch => {
   } catch (error) {
     dispatch({
       type: GET_PRODUCT_FAILED
+    });
+  }
+};
+
+export const addProduct = productDetails => async dispatch => {
+  try {
+    await axios.post("/api/motors/create", productDetails);
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
     });
   }
 };

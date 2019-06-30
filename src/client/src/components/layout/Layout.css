@@ -11,10 +11,42 @@
 }
 
 .header-caption-text {
-  letter-spacing: 15px;
   font-size: 40px;
 }
 
 .brand-icon {
   height: 5vh;
+}
+
+.landingpage-header {
+  height: 80vh;
+  color: rgb(218, 212, 212);
+  background-image: linear-gradient(to left, #3333, #000),
+    url("../../static/landingpage.jpg");
+  background-size: cover;
+  background-position: top;
+  position: sticky;
+  letter-spacing: 3px;
+  font-size: 20px;
+}
+
+.position {
+  padding-top: 15%;
+}
+
+.header-buttons {
+  font-size: 15px;
+  color: rgb(218, 212, 212);
+}
+
+.r {
+  color: rgb(173, 173, 6);
+}
+.landingpage-content {
+  height: 75vh;
+}
+
+.content-text {
+  line-height: 1.5;
+  font-size: 1rem;
 }

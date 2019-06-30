@@ -1,42 +1,70 @@
 import React, { Component, Fragment } from "react";
-import { Carousel } from "react-bootstrap";
-import pic4 from "../../static/pic4.jpg";
+import { Col, Container, Jumbotron, Row } from "react-bootstrap";
 import "./Layout.css";
 
 class Landing extends Component {
   render() {
     return (
-      <Fragment>
-        {/* Carousel */}
-        <div>
-          <Carousel>
-            <Carousel.Item>
-              <img className="d-block w-100" src={pic4} alt="First slide" />
+      <div>
+        <Fragment>
+          <Jumbotron className="landingpage-header">
+            <div className="container">
+              <div className="position">
+                <h1>
+                  <span className="r">R</span>USI Motorcycles
+                </h1>
+                <p>One of the most loved motorcycle brand.</p>
+              </div>
+              <div>
+                <a
+                  href="/login"
+                  className="px-5 btn btn-outline-light btn-md header-buttons"
+                >
+                  Login
+                </a>
+                <a
+                  href="/register"
+                  className="ml-3 px-5 btn btn-outline-light btn-md header-buttons"
+                >
+                  Register
+                </a>
+              </div>
+            </div>
+          </Jumbotron>
 
-              <Carousel.Caption>
-                <div className="header-caption">
-                  <h1 className="header-caption-text">RUSI Motors Inc.</h1>
-                  <h3>A Real Man Machine</h3>
-                  <p>Rusi Motors</p>
-                </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-              <img className="d-block w-100" src={pic4} alt="Third slide" />
-
-              <Carousel.Caption>
-                <div className="header-caption">
-                  <h1 className="header-caption-text">Inquire here now!</h1>
-                  <h3>Most Powerful</h3>
-                  <p>Rusi Motors</p>
-                </div>
-              </Carousel.Caption>
-            </Carousel.Item>
-          </Carousel>
-        </div>
-
-        {/* Some Content */}
-      </Fragment>
+          {/* Some Content */}
+          <div className="landingpage-content">
+            <Container fluid>
+              <Row>
+                <Col md={{ span: 4 }}>
+                  <p className="content-text">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Nihil consequatur, doloribus libero iste optio magnam
+                    provident, illum vero, odio culpa assumenda amet sint
+                    voluptatem? Dignissimos perspiciat
+                  </p>
+                </Col>
+                <Col md={{ span: 4 }}>
+                  <p className="content-text">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Nihil consequatur, doloribus libero iste optio magnam
+                    provident, illum vero, odio culpa assumenda amet sint
+                    voluptatem? Dignissimos perspiciat
+                  </p>
+                </Col>
+                <Col md={{ span: 4 }}>
+                  <p className="content-text">
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Nihil consequatur, doloribus libero iste optio magnam
+                    provident, illum vero, odio culpa assumenda amet sint
+                    voluptatem? Dignissimos perspiciat
+                  </p>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+        </Fragment>
+      </div>
     );
   }
 }

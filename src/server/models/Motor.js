@@ -32,6 +32,10 @@ const MotorSchema = new mongoose.Schema({
   length: {
     type: String,
     required: true
+  },
+  date: {
+    type: Date,
+    default: Date.now
   }
 });
 
