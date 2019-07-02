@@ -23,10 +23,9 @@ class Products extends Component {
 
   searchProduct = () => {
     const { modelName } = this.state;
-    if (modelName === "") {
-      this.props.getProducts();
+    if (modelName !== "") {
+      this.props.getProduct(modelName.toUpperCase());
     }
-    this.props.getProduct(modelName.toUpperCase());
     this.setState({ modelName: "" });
   };
 

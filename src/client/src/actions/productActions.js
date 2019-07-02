@@ -52,3 +52,25 @@ export const addProduct = productDetails => async dispatch => {
     });
   }
 };
+
+export const editProduct = (productData, id) => async dispatch => {
+  try {
+    await axios.put(`/api/motors/edit/${id}`, productData);
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
+    });
+  }
+};
+
+export const deleteProduct = id => async dispatch => {
+  try {
+    await axios.delete(`/api/motors/${id}`);
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
+    });
+  }
+};

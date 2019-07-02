@@ -32,7 +32,7 @@ class Navigation extends Component {
       <Fragment>
         {user !== null && user.isAdmin ? adminLinks : null}
 
-        <Link className="nav-link" to="/Products">
+        <Link className="nav-link" to="/products">
           {""}
           Products
         </Link>
