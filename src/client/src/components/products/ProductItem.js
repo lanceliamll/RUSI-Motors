@@ -73,6 +73,14 @@ const ProductItem = ({
     }
   };
 
+  const onNotAvailbleToggle = () => {
+    const confirm = window.confirm("Are you sure you wanted to continue?");
+
+    if (confirm) {
+      console.log("Nice");
+    }
+  };
+
   const onSubmit = e => {
     e.preventDefault();
     const { motorModel, image, type, height, weight, width, length } = editData;
@@ -95,6 +103,9 @@ const ProductItem = ({
         <img src={products.image} className="card-img-top img-size" alt="..." />
         <div className="card-body">
           <h5 className="card-title">{products.motorModel}</h5>
+          <h5 className="card-title">
+            ₱{products.priceFrom} - {products.priceTo}
+          </h5>
           <p className="card-text">
             <b>Type: </b>
             {products.type}
@@ -232,6 +243,10 @@ const ProductItem = ({
                   </Form>
                 </Modal.Body>
               </Modal>
+
+              <Button onClick={onNotAvailbleToggle} className="btn btn-danger">
+                Mark as Not Available
+              </Button>
 
               <Button onClick={onDeleteProduct} className="btn btn-danger">
                 Delete

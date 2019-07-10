@@ -3,6 +3,10 @@ import { Col, Container, Jumbotron, Row } from "react-bootstrap";
 import "./Layout.css";
 
 class Landing extends Component {
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
   render() {
     return (
       <div>
@@ -18,13 +22,13 @@ class Landing extends Component {
               <div>
                 <a
                   href="/login"
-                  className="px-5 btn btn-outline-light btn-md header-buttons"
+                  className="px-4 btn btn-outline-light btn-sm header-buttons"
                 >
                   Login
                 </a>
                 <a
                   href="/register"
-                  className="ml-3 px-5 btn btn-outline-light btn-md header-buttons"
+                  className="ml-3 px-4 btn btn-outline-light btn-sm header-buttons"
                 >
                   Register
                 </a>
@@ -38,10 +42,10 @@ class Landing extends Component {
               <Row>
                 <Col md={{ span: 4 }}>
                   <p className="content-text">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Nihil consequatur, doloribus libero iste optio magnam
-                    provident, illum vero, odio culpa assumenda amet sint
-                    voluptatem? Dignissimos perspiciat
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Ipsum, deleniti! Veniam molestiae ratione eius accusantium
+                    reiciendis ad cumque nesciunt aliquam harum, dolores
+                    doloremque illo, dolorem tempore magnam beatae! Atque, quis!
                   </p>
                 </Col>
                 <Col md={{ span: 4 }}>

@@ -65,7 +65,17 @@ router.get("/model/:motorModel", authorized, async (req, res) => {
 //@DESCRIPTION    create a motor
 //@ACCESS         private
 router.post("/create", authorized, async (req, res) => {
-  const { motorModel, image, type, weight, height, length, width } = req.body;
+  const {
+    priceFrom,
+    priceTo,
+    motorModel,
+    image,
+    type,
+    weight,
+    height,
+    length,
+    width
+  } = req.body;
   const { id } = req.user;
 
   try {
@@ -76,6 +86,8 @@ router.post("/create", authorized, async (req, res) => {
     }
 
     newMotor = await new Motor({
+      priceFrom,
+      priceTo,
       motorModel,
       image,
       type,
@@ -94,15 +106,51 @@ router.post("/create", authorized, async (req, res) => {
   }
 });
 
+//@ROUTE          localhost:5000/api/motors/:id
+//@DESCRIPTION    query all motors
+//@ACCESS         private
+router.put("/:id", authorized, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    let motor = await Motor.findById(id);
+
+    if (motor.isAvailable === true) {
+      await motor.updateOne({
+        isAvailable: false
+      });
+    } else {
+      await motor.updateOne({
+        isAvailable: true
+      });
+    }
+    res.json("Updated");
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
 //@ROUTE          localhost:5000/api/motors/edit/:id
 //@DESCRIPTION    edit a motor info
 //@ACCESS         private
 router.put("/edit/:id", authorized, async (req, res) => {
-  const { motorModel, image, type, weight, height, length, width } = req.body;
+  const {
+    priceFrom,
+    priceTo,
+    motorModel,
+    image,
+    type,
+    weight,
+    height,
+    length,
+    width
+  } = req.body;
   const { id } = req.params;
 
   try {
     await Motor.findById(id).updateOne({
+      priceFrom,
+      priceTo,
       motorModel,
       image,
       type,

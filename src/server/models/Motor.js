@@ -5,6 +5,14 @@ const MotorSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user"
   },
+  priceFrom: {
+    type: Number,
+    default: 0
+  },
+  priceTo: {
+    type: Number,
+    default: 0
+  },
   motorModel: {
     type: String,
     required: true
@@ -32,6 +40,10 @@ const MotorSchema = new mongoose.Schema({
   length: {
     type: String,
     required: true
+  },
+  isAvailable: {
+    type: Boolean,
+    default: true
   },
   date: {
     type: Date,
