@@ -54,7 +54,9 @@ class Login extends Component {
                   <Form.Label>Username</Form.Label>
                   <Form.Control
                     type="text"
-                    className={errors.username || errors.user ? "is-invalid" : ""}
+                    className={
+                      errors.username || errors.user ? "is-invalid" : ""
+                    }
                     placeholder="Enter Username"
                     name="username"
                     value={username}
@@ -69,14 +71,16 @@ class Login extends Component {
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type="password"
-                    className={errors.password || errors.user ? "is-invalid" : ""}
+                    className={
+                      errors.password || errors.user ? "is-invalid" : ""
+                    }
                     placeholder="Password"
                     name="password"
                     value={password}
                     onChange={this.onChange}
                   />
                   <Form.Text className="text-danger">
-                    {errors && <p>{errors.username}</p>}
+                    {errors && <p>{errors.password}</p>}
                   </Form.Text>
 
                   <Form.Text className="text-danger">

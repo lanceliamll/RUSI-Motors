@@ -2,12 +2,18 @@ import PropTypes from "prop-types";
 import React, { Fragment, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
-import { deleteProduct, editProduct } from "../../actions/productActions";
+import {
+  deleteProduct,
+  editProduct,
+  toggleIsAvailable
+} from "../../actions/productActions";
+import phPrice from "./PhPrice";
 
 // : { image, motorModel, type, height, width, weight, length }
 const ProductItem = ({
   editProduct,
   deleteProduct,
+  toggleIsAvailable,
   products,
   auth: {
     user: { isAdmin }
@@ -16,6 +22,8 @@ const ProductItem = ({
   //State
   const [editData, setEditData] = useState({
     motorModel: "",
+    priceFrom: "",
+    priceTo: "",
     image: "",
     type: "",
     height: "",
@@ -27,6 +35,8 @@ const ProductItem = ({
   useEffect(() => {
     setEditData({
       motorModel: !products.motorModel ? "" : products.motorModel,
+      priceFrom: !products.priceFrom ? "" : products.priceFrom,
+      priceTo: !products.priceTo ? "" : products.priceTo,
       image: !products.image ? "" : products.image,
       type: !products.type ? "" : products.type,
       height: !products.height ? "" : products.height,
@@ -73,19 +83,33 @@ const ProductItem = ({
     }
   };
 
-  const onNotAvailbleToggle = () => {
+  const onToggleAvailable = () => {
     const confirm = window.confirm("Are you sure you wanted to continue?");
 
     if (confirm) {
-      console.log("Nice");
+      toggleIsAvailable(products._id);
     }
+    window.location.reload();
   };
 
   const onSubmit = e => {
     e.preventDefault();
-    const { motorModel, image, type, height, weight, width, length } = editData;
+
+    const {
+      motorModel,
+      priceFrom,
+      priceTo,
+      image,
+      type,
+      height,
+      weight,
+      width,
+      length
+    } = editData;
     const editedData = {
       motorModel,
+      priceFrom,
+      priceTo,
       image,
       type,
       height,
@@ -93,6 +117,7 @@ const ProductItem = ({
       width,
       length
     };
+
     editProduct(editedData, products._id);
     window.location.reload();
   };
@@ -102,9 +127,17 @@ const ProductItem = ({
       <div className="card">
         <img src={products.image} className="card-img-top img-size" alt="..." />
         <div className="card-body">
-          <h5 className="card-title">{products.motorModel}</h5>
           <h5 className="card-title">
-            ₱{products.priceFrom} - {products.priceTo}
+            {products.motorModel}{" "}
+            {products.isAvailable ? (
+              ""
+            ) : (
+              <span className="text-danger">- (Not Available) </span>
+            )}
+          </h5>
+          <h5 className="card-title">
+            ₱ {products && products !== null && phPrice(products.priceFrom)} -{" "}
+            {products && products !== null && phPrice(products.priceTo)}
           </h5>
           <p className="card-text">
             <b>Type: </b>
@@ -177,6 +210,24 @@ const ProductItem = ({
                         onChange={e => onChange(e)}
                       />
 
+                      <Form.Label>Price From</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Price From"
+                        name="priceFrom"
+                        value={editData.priceFrom}
+                        onChange={e => onChange(e)}
+                      />
+
+                      <Form.Label>Price To</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Price To"
+                        name="priceTo"
+                        value={editData.priceTo}
+                        onChange={e => onChange(e)}
+                      />
+
                       <Form.Label>Image</Form.Label>
                       <Form.Control
                         type="text"
@@ -231,7 +282,11 @@ const ProductItem = ({
                         onChange={e => onChange(e)}
                       />
                     </Form.Group>
-                    <Button type="submit" className="btn btn-primary">
+                    <Button
+                      type="submit"
+                      disabled={editData.priceFrom > editData.priceTo}
+                      className="btn btn-primary"
+                    >
                       Save Changes
                     </Button>{" "}
                     <Button
@@ -244,8 +299,10 @@ const ProductItem = ({
                 </Modal.Body>
               </Modal>
 
-              <Button onClick={onNotAvailbleToggle} className="btn btn-danger">
-                Mark as Not Available
+              <Button onClick={onToggleAvailable} className="btn-btn-primary">
+                {products.isAvailable
+                  ? "Mark as Not Available"
+                  : "Mark as Available"}
               </Button>
 
               <Button onClick={onDeleteProduct} className="btn btn-danger">
@@ -294,7 +351,8 @@ const ProductItem = ({
 
 ProductItem.propTypes = {
   product: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  toggleIsAvailable: PropTypes.func.isRequired
 };
 
 const mapStateToPros = state => ({
@@ -304,5 +362,5 @@ const mapStateToPros = state => ({
 
 export default connect(
   mapStateToPros,
-  { editProduct, deleteProduct }
+  { editProduct, deleteProduct, toggleIsAvailable }
 )(ProductItem);

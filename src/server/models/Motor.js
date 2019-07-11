@@ -6,12 +6,12 @@ const MotorSchema = new mongoose.Schema({
     ref: "user"
   },
   priceFrom: {
-    type: Number,
-    default: 0
+    type: String,
+    required: true
   },
   priceTo: {
-    type: Number,
-    default: 0
+    type: String,
+    required: true
   },
   motorModel: {
     type: String,
