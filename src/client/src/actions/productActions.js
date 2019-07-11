@@ -66,7 +66,7 @@ export const editProduct = (productData, id) => async dispatch => {
 
 export const toggleIsAvailable = id => async dispatch => {
   try {
-    await axios.put(`api/motors/${id}`);
+    await axios.put(`api/motors/toggle/${id}`);
   } catch (error) {
     dispatch({
       type: GET_ERRORS,

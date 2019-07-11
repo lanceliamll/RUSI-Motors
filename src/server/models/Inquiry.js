@@ -11,14 +11,8 @@ const InquirySchema = mongoose.Schema({
   address: {
     type: String
   },
-  motorMode: {
+  motorModel: {
     type: String
-  },
-  fromTime: {
-    type: Date
-  },
-  toTime: {
-    type: Date
   },
   randomCode: {
     type: String

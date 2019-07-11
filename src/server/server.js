@@ -24,6 +24,7 @@ app.use(
 //Define routes
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/motors", require("./routes/api/motors"));
+app.use("/api/inquiry", require("./routes/api/inquiry"));
 
 const PORT = process.env.PORT || 5000;
 

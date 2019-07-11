@@ -9,7 +9,7 @@ const authorized = require("../../middleware/authorized");
 
 router.get("/", authorized, async (req, res) => {
   try {
-    let motors = await Motor.find();
+    let motors = await Motor.find().sort({ date: -1 });
 
     if (!motors) {
       return res.status(404).json({ message: "No motors found" });
@@ -106,10 +106,10 @@ router.post("/create", authorized, async (req, res) => {
   }
 });
 
-//@ROUTE          localhost:5000/api/motors/:id
-//@DESCRIPTION    query all motors
+//@ROUTE          localhost:5000/api/motors/toggle/:id
+//@DESCRIPTION    toggle availability
 //@ACCESS         private
-router.put("/:id", authorized, async (req, res) => {
+router.put("/toggle/:id", authorized, async (req, res) => {
   const { id } = req.params;
 
   try {
