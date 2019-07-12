@@ -11,6 +11,9 @@ router.get("/", authorized, async (req, res) => {
   try {
     let inquiries = await Inquiry.find().sort({ date: -1 });
 
+    if (!inquiries) {
+      return res.json({ message: "No inquiries found!" });
+    }
     res.json(inquiries);
   } catch (error) {
     res.status(500).json({ message: "Server Error" });

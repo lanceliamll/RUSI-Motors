@@ -1,7 +1,8 @@
 import PropTypes from "prop-types";
-import React, { Component } from "react";
-import { Accordion, Button, Card, Form } from "react-bootstrap";
+import React, { Component, Fragment } from "react";
+import { Accordion, Button, Card, Form, Table } from "react-bootstrap";
 import { connect } from "react-redux";
+import { getInquiries } from "../../actions/inquiryActions";
 import { addProduct } from "../../actions/productActions";
 
 class AdminSettings extends Component {
@@ -16,6 +17,9 @@ class AdminSettings extends Component {
       width: "",
       length: ""
     };
+  }
+  componentDidMount() {
+    this.props.getInquiries();
   }
 
   onSubmit = e => {
@@ -57,6 +61,8 @@ class AdminSettings extends Component {
   };
 
   render() {
+    const { inquiries, inquiry, loading } = this.props.inquiry;
+
     const {
       motorModel,
       image,
@@ -165,11 +171,57 @@ class AdminSettings extends Component {
           <Card>
             <Card.Header>
               <Accordion.Toggle as={Card.Header} variant="link" eventKey="1">
-                Click me!
+                List of Inquiries
               </Accordion.Toggle>
             </Card.Header>
             <Accordion.Collapse eventKey="1">
-              <Card.Body>Hello! I'm another body</Card.Body>
+              <Card.Body>
+                <div>
+                  <Table striped bordered hover>
+                    {loading && inquiries === null ? (
+                      <p>Loading...</p>
+                    ) : (
+                      <Fragment>
+                        {inquiries !== null ? (
+                          <Fragment>
+                            <thead>
+                              <tr>
+                                <th>Code</th>
+                                <th>Full Name</th>
+                                <th>Address</th>
+                                <th>Motor Model</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            {inquiries.map(inquiry => (
+                              <Fragment>
+                                <tbody>
+                                  <tr>
+                                    <td>{inquiry.randomCode}</td>
+                                    <td>{inquiry.fullName}</td>
+                                    <td>{inquiry.address}</td>
+                                    <td>{inquiry.motorModel}</td>
+                                    <td>
+                                      <Fragment>
+                                        <Button>Edit</Button>
+                                        <Button className="btn btn-danger">
+                                          Delete
+                                        </Button>
+                                      </Fragment>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </Fragment>
+                            ))}
+                          </Fragment>
+                        ) : (
+                          <Fragment>No inqiries found</Fragment>
+                        )}
+                      </Fragment>
+                    )}
+                  </Table>
+                </div>
+              </Card.Body>
             </Accordion.Collapse>
           </Card>
         </Accordion>
@@ -179,10 +231,15 @@ class AdminSettings extends Component {
 }
 
 AdminSettings.propTypes = {
-  addProduct: PropTypes.func.isRequired
+  addProduct: PropTypes.func.isRequired,
+  getInquiries: PropTypes.func.isRequired
 };
 
+const mapStateToProps = state => ({
+  inquiry: state.inquiry
+});
+
 export default connect(
-  null,
-  { addProduct }
+  mapStateToProps,
+  { addProduct, getInquiries }
 )(AdminSettings);
