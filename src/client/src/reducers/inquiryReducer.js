@@ -1,4 +1,4 @@
-import { GET_INQUIRIES } from "../actions/types";
+import { GET_INQUIRIES, GET_INQUIRY } from "../actions/types";
 
 const initialState = {
   inquiry: null,
@@ -13,6 +13,14 @@ export default function(state = initialState, action) {
       return {
         ...state,
         inquiries: payload,
+        inquiry: null,
+        loading: false
+      };
+    case GET_INQUIRY:
+      return {
+        ...state,
+        inquiry: payload,
+        inquiries: [],
         loading: false
       };
     default:

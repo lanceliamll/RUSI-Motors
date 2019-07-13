@@ -2,8 +2,9 @@ import PropTypes from "prop-types";
 import React, { Component, Fragment } from "react";
 import { Accordion, Button, Card, Form, Table } from "react-bootstrap";
 import { connect } from "react-redux";
-import { getInquiries } from "../../actions/inquiryActions";
+import { getInquiries, getInquiry } from "../../actions/inquiryActions";
 import { addProduct } from "../../actions/productActions";
+import InquiryItem from "./InquiryItem";
 
 class AdminSettings extends Component {
   constructor() {
@@ -15,12 +16,29 @@ class AdminSettings extends Component {
       height: "",
       weight: "",
       width: "",
-      length: ""
+      length: "",
+      randomCode: "",
+      errors: {}
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+  }
+
   componentDidMount() {
     this.props.getInquiries();
   }
+
+  onSearch = e => {
+    e.preventDefault();
+    if (this.state.randomCode !== "" || this.state.randomCode !== null) {
+      this.props.getInquiry(this.state.randomCode);
+    }
+    this.setState({ randomCode: "" });
+  };
 
   onSubmit = e => {
     const {
@@ -60,6 +78,18 @@ class AdminSettings extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  tableHead = (
+    <thead>
+      <tr>
+        <th>Code</th>
+        <th>Full Name</th>
+        <th>Address</th>
+        <th>Motor Model</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+  );
+
   render() {
     const { inquiries, inquiry, loading } = this.props.inquiry;
 
@@ -70,7 +100,8 @@ class AdminSettings extends Component {
       height,
       weight,
       width,
-      length
+      length,
+      randomCode
     } = this.state;
     return (
       <div className="container">
@@ -176,50 +207,62 @@ class AdminSettings extends Component {
             </Card.Header>
             <Accordion.Collapse eventKey="1">
               <Card.Body>
-                <div>
-                  <Table striped bordered hover>
-                    {loading && inquiries === null ? (
-                      <p>Loading...</p>
-                    ) : (
-                      <Fragment>
-                        {inquiries !== null ? (
-                          <Fragment>
-                            <thead>
-                              <tr>
-                                <th>Code</th>
-                                <th>Full Name</th>
-                                <th>Address</th>
-                                <th>Motor Model</th>
-                                <th>Actions</th>
-                              </tr>
-                            </thead>
+                <div className="cotainter">
+                  <Form>
+                    <Form.Group>
+                      <Form.Label>Search Code</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Code"
+                        name="randomCode"
+                        value={randomCode}
+                        onChange={this.onChange}
+                      />
+                      <Button variant="primary" onClick={this.onSearch}>
+                        Search
+                      </Button>
+                    </Form.Group>
+                  </Form>
+                </div>
+                <div className="container">
+                  {loading && inquiries === [] ? (
+                    <Fragment>Loading...</Fragment>
+                  ) : (
+                    <Fragment>
+                      {inquiries && inquiry === null ? (
+                        <Fragment>
+                          <Table>
+                            {this.tableHead}
                             {inquiries.map(inquiry => (
-                              <Fragment>
+                              <Fragment key={inquiry._id}>
                                 <tbody>
-                                  <tr>
-                                    <td>{inquiry.randomCode}</td>
-                                    <td>{inquiry.fullName}</td>
-                                    <td>{inquiry.address}</td>
-                                    <td>{inquiry.motorModel}</td>
-                                    <td>
-                                      <Fragment>
-                                        <Button>Edit</Button>
-                                        <Button className="btn btn-danger">
-                                          Delete
-                                        </Button>
-                                      </Fragment>
-                                    </td>
-                                  </tr>
+                                  <InquiryItem
+                                    key={inquiry._id}
+                                    inquiries={inquiry}
+                                  />
                                 </tbody>
                               </Fragment>
                             ))}
-                          </Fragment>
-                        ) : (
-                          <Fragment>No inqiries found</Fragment>
-                        )}
-                      </Fragment>
-                    )}
-                  </Table>
+                          </Table>
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          <Table>
+                            {this.tableHead}
+                            {inquiry ? (
+                              <Fragment key={inquiry._id}>
+                                <tbody>
+                                  <InquiryItem inquiries={inquiry} />
+                                </tbody>
+                              </Fragment>
+                            ) : (
+                              <Fragment>No inquiries found</Fragment>
+                            )}
+                          </Table>
+                        </Fragment>
+                      )}
+                    </Fragment>
+                  )}
                 </div>
               </Card.Body>
             </Accordion.Collapse>
@@ -232,7 +275,8 @@ class AdminSettings extends Component {
 
 AdminSettings.propTypes = {
   addProduct: PropTypes.func.isRequired,
-  getInquiries: PropTypes.func.isRequired
+  getInquiries: PropTypes.func.isRequired,
+  getInquiry: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -241,5 +285,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addProduct, getInquiries }
+  { addProduct, getInquiries, getInquiry }
 )(AdminSettings);
