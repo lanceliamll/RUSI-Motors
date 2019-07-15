@@ -48,7 +48,7 @@ const ProductItem = ({
 
   //Modal Concerns
   const [showImageModal, setShowImageModal] = useState(false);
-
+  const [showInquireMotor, setShowInquireMotor] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
   let handleShowImageModal = () => {
@@ -56,6 +56,14 @@ const ProductItem = ({
   };
   let handleCloseImageModal = () => {
     setShowImageModal(false);
+  };
+
+  let handleShowInquireModal = () => {
+    setShowInquireMotor(true);
+  };
+
+  let handleCloseInquireModal = () => {
+    setShowInquireMotor(false);
   };
 
   let handleShowEditModal = () => {
@@ -91,6 +99,39 @@ const ProductItem = ({
     }
     window.location.reload();
   };
+
+  let viewMotor = (
+    <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
+      <Modal.Header>
+        <Modal.Title>{products.motorModel}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <img src={products.image} className="card-img-top img-size" alt="..." />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleCloseImageModal} className="btn btn-primary">
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  //INQUIRE HERE
+  let inquireMotor = (
+    <Modal show={showInquireMotor} onHide={handleCloseInquireModal} size="lg">
+      <Modal.Header>
+        <Modal.Title>{products.motorModel}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <img src={products.image} className="card-img-top img-size" alt="..." />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleCloseInquireModal} className="btn btn-primary">
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 
   const onSubmit = e => {
     e.preventDefault();
@@ -311,36 +352,23 @@ const ProductItem = ({
             </div>
           ) : (
             <Fragment>
-              <Button
-                onClick={handleShowImageModal}
-                className="btn btn-primary"
-              >
-                View
-              </Button>
-              <Modal
-                show={showImageModal}
-                onHide={handleCloseImageModal}
-                size="lg"
-              >
-                <Modal.Header>
-                  <Modal.Title>{products.motorModel}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <img
-                    src={products.image}
-                    className="card-img-top img-size"
-                    alt="..."
-                  />
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button
-                    onClick={handleCloseImageModal}
-                    className="btn btn-primary"
-                  >
-                    Cancel
-                  </Button>
-                </Modal.Footer>
-              </Modal>
+              <div className="admin-buttons">
+                <Button
+                  onClick={handleShowImageModal}
+                  className="btn btn-primary"
+                >
+                  View
+                </Button>
+                {viewMotor}
+
+                <Button
+                  onClick={handleShowInquireModal}
+                  className="btn btn-primary"
+                >
+                  Inquire in this Item
+                </Button>
+                {inquireMotor}
+              </div>
             </Fragment>
           )}
         </div>

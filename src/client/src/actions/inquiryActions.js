@@ -32,3 +32,25 @@ export const getInquiry = randomCode => async dispatch => {
     });
   }
 };
+
+export const editInquiry = (inquiryData, id) => async dispatch => {
+  try {
+    await axios.put(`/api/inquiry/${id}`, inquiryData);
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
+    });
+  }
+};
+
+export const deleteInquiry = id => async dispatch => {
+  try {
+    await axios.delete(`/api/inquiry/${id}`);
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
+    });
+  }
+};
