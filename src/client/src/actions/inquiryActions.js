@@ -54,3 +54,14 @@ export const deleteInquiry = id => async dispatch => {
     });
   }
 };
+
+export const addInquiry = inquiryData => async dispatch => {
+  try {
+    await axios.post("/api/inquiry/create", inquiryData);
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
+    });
+  }
+};

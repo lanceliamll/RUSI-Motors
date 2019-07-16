@@ -83,8 +83,6 @@ class AdminSettings extends Component {
       <tr>
         <th>Code</th>
         <th>Full Name</th>
-        <th>Address</th>
-        <th>Motor Model</th>
         <th>Actions</th>
       </tr>
     </thead>

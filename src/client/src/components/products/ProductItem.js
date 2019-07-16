@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React, { Fragment, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
+import { addInquiry } from "../../actions/inquiryActions";
 import {
   deleteProduct,
   editProduct,
@@ -11,6 +12,7 @@ import phPrice from "./PhPrice";
 
 const ProductItem = ({
   editProduct,
+  addInquiry,
   deleteProduct,
   toggleIsAvailable,
   products,
@@ -54,6 +56,7 @@ const ProductItem = ({
   const [showImageModal, setShowImageModal] = useState(false);
   const [showInquireMotor, setShowInquireMotor] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showCodeModal, setShowCodeModal] = useState(false);
 
   let handleShowImageModal = () => {
     setShowImageModal(true);
@@ -76,6 +79,10 @@ const ProductItem = ({
 
   let handleCloseEditModal = () => {
     setShowEditModal(false);
+  };
+
+  let handleCloseCodeModal = () => {
+    setShowCodeModal(false);
   };
 
   const onChange = e => {
@@ -138,7 +145,9 @@ const ProductItem = ({
     window.location.reload();
   };
 
-  const onSumitInquiry = e => {
+  const onSubmitInquiry = e => {
+    setShowCodeModal(true);
+    setShowEditModal(false);
     e.preventDefault();
     const { motorModel } = editData;
     const { fullName, address } = infoData;
@@ -149,9 +158,29 @@ const ProductItem = ({
       motorModel
     };
 
-    console.log(newInquiry);
+    addInquiry(newInquiry);
     setInfoData({ fullName: "", address: "" });
   };
+
+  let viewRandomCode = (
+    <Modal show={showCodeModal} onHide={handleCloseCodeModal} size="lg">
+      <Modal.Header>
+        <Modal.Title>Inquiry Code</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <h1>nice</h1>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          onClick={handleCloseCodeModal}
+          disabled={infoData.fullName && infoData.address === ""}
+          className="btn btn-primary"
+        >
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
 
   let viewMotor = (
     <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
@@ -206,7 +235,7 @@ const ProductItem = ({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={onSumitInquiry}>Inquire</Button>
+        <Button onClick={onSubmitInquiry}>Inquire</Button>
         <Button onClick={handleCloseInquireModal} className="btn btn-primary">
           Cancel
         </Button>
@@ -419,6 +448,7 @@ const ProductItem = ({
                   Inquire
                 </Button>
                 {inquireMotor}
+                {viewRandomCode}
               </div>
             </Fragment>
           )}
@@ -431,6 +461,7 @@ const ProductItem = ({
 ProductItem.propTypes = {
   product: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
+  addInquiry: PropTypes.func.isRequired,
   toggleIsAvailable: PropTypes.func.isRequired
 };
 
@@ -441,5 +472,5 @@ const mapStateToPros = state => ({
 
 export default connect(
   mapStateToPros,
-  { editProduct, deleteProduct, toggleIsAvailable }
+  { editProduct, deleteProduct, toggleIsAvailable, addInquiry }
 )(ProductItem);

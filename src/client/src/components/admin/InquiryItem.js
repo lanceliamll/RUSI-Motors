@@ -134,8 +134,6 @@ const InquiryItem = ({
       <tr>
         <td>{randomCode}</td>
         <td>{fullName}</td>
-        <td>{address}</td>
-        <td>{motorModel}</td>
         <td>
           <Fragment>
             <Button onClick={showModal}>Edit</Button>

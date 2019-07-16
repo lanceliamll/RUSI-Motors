@@ -45,7 +45,7 @@ router.get("/code/:randomCode", authorized, async (req, res) => {
 //@ACCESS         private
 router.post("/create", authorized, async (req, res) => {
   const { fullName, address, motorModel } = req.body;
-  const { id } = req.body;
+  const { id } = req.user;
 
   try {
     let random = await uuidv4();
