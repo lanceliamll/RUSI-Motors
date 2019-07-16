@@ -9,7 +9,6 @@ import {
 } from "../../actions/productActions";
 import phPrice from "./PhPrice";
 
-// : { image, motorModel, type, height, width, weight, length }
 const ProductItem = ({
   editProduct,
   deleteProduct,
@@ -30,6 +29,11 @@ const ProductItem = ({
     weight: "",
     width: "",
     length: ""
+  });
+
+  const [infoData, setInfoData] = useState({
+    fullName: "",
+    address: ""
   });
 
   useEffect(() => {
@@ -79,6 +83,10 @@ const ProductItem = ({
       ...editData,
       [e.target.name]: e.target.value
     });
+    setInfoData({
+      ...infoData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const onDeleteProduct = () => {
@@ -99,39 +107,6 @@ const ProductItem = ({
     }
     window.location.reload();
   };
-
-  let viewMotor = (
-    <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
-      <Modal.Header>
-        <Modal.Title>{products.motorModel}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <img src={products.image} className="card-img-top img-size" alt="..." />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleCloseImageModal} className="btn btn-primary">
-          Cancel
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
-
-  //INQUIRE HERE
-  let inquireMotor = (
-    <Modal show={showInquireMotor} onHide={handleCloseInquireModal} size="lg">
-      <Modal.Header>
-        <Modal.Title>{products.motorModel}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <img src={products.image} className="card-img-top img-size" alt="..." />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleCloseInquireModal} className="btn btn-primary">
-          Cancel
-        </Button>
-      </Modal.Footer>
-    </Modal>
-  );
 
   const onSubmit = e => {
     e.preventDefault();
@@ -162,6 +137,197 @@ const ProductItem = ({
     editProduct(editedData, products._id);
     window.location.reload();
   };
+
+  const onSumitInquiry = e => {
+    e.preventDefault();
+    const { motorModel } = editData;
+    const { fullName, address } = infoData;
+
+    const newInquiry = {
+      fullName,
+      address,
+      motorModel
+    };
+
+    console.log(newInquiry);
+    setInfoData({ fullName: "", address: "" });
+  };
+
+  let viewMotor = (
+    <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
+      <Modal.Header>
+        <Modal.Title>{products.motorModel}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <img src={products.image} className="card-img-top img-size" alt="..." />
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={handleCloseImageModal} className="btn btn-primary">
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  //INQUIRE HERE
+  let inquireMotor = (
+    <Modal show={showInquireMotor} onHide={handleCloseInquireModal} size="lg">
+      <Modal.Header>
+        <Modal.Title>{products.motorModel}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Label>Full Name</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Full Name"
+            name="fullName"
+            value={infoData.fullName}
+            onChange={e => onChange(e)}
+          />
+
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Address"
+            name="address"
+            value={infoData.address}
+            onChange={e => onChange(e)}
+          />
+
+          <Form.Label>Motor Model</Form.Label>
+          <Form.Control
+            type="text"
+            disabled
+            placeholder="Motor Model"
+            name="motorModel"
+            value={editData.motorModel}
+          />
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={onSumitInquiry}>Inquire</Button>
+        <Button onClick={handleCloseInquireModal} className="btn btn-primary">
+          Cancel
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
+  const showImageModalComponent = (
+    <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
+      <Modal.Header>
+        <Modal.Title>Product Image</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <img src={products.image} className="card-img-top img-size" alt="..." />
+      </Modal.Body>
+    </Modal>
+  );
+
+  const editProductModalComponent = (
+    <Modal show={showEditModal} onHide={handleCloseEditModal} size="lg">
+      <Modal.Header>
+        <Modal.Title>{products.motorModel}</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form onSubmit={onSubmit}>
+          <Form.Group>
+            <Form.Label>Motor Model</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Motor Model"
+              name="motorModel"
+              value={editData.motorModel}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Price From</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Price From"
+              name="priceFrom"
+              value={editData.priceFrom}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Price To</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Price To"
+              name="priceTo"
+              value={editData.priceTo}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Image</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Image"
+              name="image"
+              value={editData.image}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Type</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="type"
+              name="type"
+              value={editData.type}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Height</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Height"
+              name="height"
+              value={editData.height}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Weight</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Weight"
+              name="weight"
+              value={editData.weight}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Width</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Width"
+              name="width"
+              value={editData.width}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Length</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Length"
+              name="length"
+              value={editData.length}
+              onChange={e => onChange(e)}
+            />
+          </Form.Group>
+          <Button
+            type="submit"
+            disabled={editData.priceFrom > editData.priceTo}
+            className="btn btn-primary"
+          >
+            Save Changes
+          </Button>{" "}
+          <Button onClick={handleCloseEditModal} className="btn btn-danger">
+            Cancel
+          </Button>
+        </Form>
+      </Modal.Body>
+    </Modal>
+  );
 
   return (
     <div className="card-component">
@@ -200,7 +366,7 @@ const ProductItem = ({
             <b>Length: </b>
             {products.length}
           </p>
-          <p className="card-text">Rusi Motors Inc.</p>
+          <h6>Rusi Motors Inc.</h6>
           {isAdmin ? (
             <div className="admin-buttons">
               <Button
@@ -210,141 +376,26 @@ const ProductItem = ({
               >
                 View
               </Button>
+              {showImageModalComponent}
 
-              <Modal
-                show={showImageModal}
-                onHide={handleCloseImageModal}
-                size="lg"
-              >
-                <Modal.Header>
-                  <Modal.Title>Product Image</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <img
-                    src={products.image}
-                    className="card-img-top img-size"
-                    alt="..."
-                  />
-                </Modal.Body>
-              </Modal>
               <Button className="btn btn-primary" onClick={handleShowEditModal}>
                 Edit
               </Button>
-
-              <Modal
-                show={showEditModal}
-                onHide={handleCloseEditModal}
-                size="lg"
-              >
-                <Modal.Header>
-                  <Modal.Title>{products.motorModel}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form onSubmit={onSubmit}>
-                    <Form.Group>
-                      <Form.Label>Motor Model</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Motor Model"
-                        name="motorModel"
-                        value={editData.motorModel}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Price From</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Price From"
-                        name="priceFrom"
-                        value={editData.priceFrom}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Price To</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Price To"
-                        name="priceTo"
-                        value={editData.priceTo}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Image</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Image"
-                        name="image"
-                        value={editData.image}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Type</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="type"
-                        name="type"
-                        value={editData.type}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Height</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Height"
-                        name="height"
-                        value={editData.height}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Weight</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Weight"
-                        name="weight"
-                        value={editData.weight}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Width</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Width"
-                        name="width"
-                        value={editData.width}
-                        onChange={e => onChange(e)}
-                      />
-
-                      <Form.Label>Length</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Length"
-                        name="length"
-                        value={editData.length}
-                        onChange={e => onChange(e)}
-                      />
-                    </Form.Group>
-                    <Button
-                      type="submit"
-                      disabled={editData.priceFrom > editData.priceTo}
-                      className="btn btn-primary"
-                    >
-                      Save Changes
-                    </Button>{" "}
-                    <Button
-                      onClick={handleCloseEditModal}
-                      className="btn btn-danger"
-                    >
-                      Cancel
-                    </Button>
-                  </Form>
-                </Modal.Body>
-              </Modal>
+              {editProductModalComponent}
 
               <Button onClick={onToggleAvailable} className="btn-btn-primary">
                 {products.isAvailable
                   ? "Mark as Not Available"
                   : "Mark as Available"}
               </Button>
+
+              <Button
+                onClick={handleShowInquireModal}
+                className="btn btn-primary"
+              >
+                Inquire
+              </Button>
+              {inquireMotor}
 
               <Button onClick={onDeleteProduct} className="btn btn-danger">
                 Delete
@@ -365,7 +416,7 @@ const ProductItem = ({
                   onClick={handleShowInquireModal}
                   className="btn btn-primary"
                 >
-                  Inquire in this Item
+                  Inquire
                 </Button>
                 {inquireMotor}
               </div>
