@@ -1,4 +1,9 @@
-import { GET_INQUIRIES, GET_INQUIRY } from "../actions/types";
+import {
+  GET_INQUIRIES,
+  GET_INQUIRY,
+  GET_INQUIRYCODE,
+  STORE_INQUIRY
+} from "../actions/types";
 
 const initialState = {
   inquiry: null,
@@ -17,6 +22,8 @@ export default function(state = initialState, action) {
         loading: false
       };
     case GET_INQUIRY:
+    case GET_INQUIRYCODE:
+    case STORE_INQUIRY:
       return {
         ...state,
         inquiry: payload,

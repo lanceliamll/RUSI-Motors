@@ -16,9 +16,11 @@ const ProductItem = ({
   deleteProduct,
   toggleIsAvailable,
   products,
+  inquiry: { inquiry },
   auth: {
     user: { isAdmin }
-  }
+  },
+  errors
 }) => {
   //State
   const [editData, setEditData] = useState({
@@ -35,7 +37,8 @@ const ProductItem = ({
 
   const [infoData, setInfoData] = useState({
     fullName: "",
-    address: ""
+    address: "",
+    errors: {}
   });
 
   useEffect(() => {
@@ -50,7 +53,10 @@ const ProductItem = ({
       width: !products.width ? "" : products.width,
       length: !products.length ? "" : products.length
     });
-  }, [products]);
+    if (errors) {
+      setInfoData({ errors: errors });
+    }
+  }, [errors, products]);
 
   //Modal Concerns
   const [showImageModal, setShowImageModal] = useState(false);
@@ -145,9 +151,7 @@ const ProductItem = ({
     window.location.reload();
   };
 
-  const onSubmitInquiry = e => {
-    setShowCodeModal(true);
-    setShowEditModal(false);
+  const onSubmitInquiry = async e => {
     e.preventDefault();
     const { motorModel } = editData;
     const { fullName, address } = infoData;
@@ -158,43 +162,51 @@ const ProductItem = ({
       motorModel
     };
 
-    addInquiry(newInquiry);
-    setInfoData({ fullName: "", address: "" });
+    await addInquiry(newInquiry);
+    await setInfoData({ fullName: "", address: "" });
+
+    if (!infoData.errors) {
+      setShowCodeModal(true);
+      setShowInquireMotor(false);
+    } else {
+      setShowInquireMotor(true);
+    }
+
+    // setShowInquireMotor(false);
+    // handleShowCodeModal();
+    // setShowInquireMotor(true);
   };
 
-  let viewRandomCode = (
+  const viewRandomCode = (
     <Modal show={showCodeModal} onHide={handleCloseCodeModal} size="lg">
       <Modal.Header>
         <Modal.Title>Inquiry Code</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <h1>nice</h1>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button
-          onClick={handleCloseCodeModal}
-          disabled={infoData.fullName && infoData.address === ""}
-          className="btn btn-primary"
-        >
+        <h5 className="text-danger">
+          Please! Do not close this modal, Take note of your random generated
+          code
+        </h5>
+        <h5 className="text-danger">
+          You must present this code on RUSI Motors, This may verify your
+          desired motorcycle...
+        </h5>
+        <h4>{inquiry !== null && inquiry.randomCode}</h4>
+        <Button onClick={handleCloseCodeModal} className="btn btn-danger">
           Cancel
         </Button>
-      </Modal.Footer>
+      </Modal.Body>
     </Modal>
   );
 
   let viewMotor = (
     <Modal show={showImageModal} onHide={handleCloseImageModal} size="lg">
       <Modal.Header>
-        <Modal.Title>{products.motorModel}</Modal.Title>
+        <Modal.Title>Product Image</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <img src={products.image} className="card-img-top img-size" alt="..." />
       </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={handleCloseImageModal} className="btn btn-primary">
-          Cancel
-        </Button>
-      </Modal.Footer>
     </Modal>
   );
 
@@ -209,20 +221,28 @@ const ProductItem = ({
           <Form.Label>Full Name</Form.Label>
           <Form.Control
             type="text"
+            className={errors || errors.fullName ? "is-invalid" : ""}
             placeholder="Full Name"
             name="fullName"
             value={infoData.fullName}
             onChange={e => onChange(e)}
           />
+          <Form.Text className="text-danger">
+            {errors && <p>{errors.fullName}</p>}
+          </Form.Text>
 
           <Form.Label>Address</Form.Label>
           <Form.Control
             type="text"
             placeholder="Address"
+            className={errors || errors.address ? "is-invalid" : ""}
             name="address"
             value={infoData.address}
             onChange={e => onChange(e)}
           />
+          <Form.Text className="text-danger">
+            {errors && <p>{errors.address}</p>}
+          </Form.Text>
 
           <Form.Label>Motor Model</Form.Label>
           <Form.Control
@@ -235,7 +255,12 @@ const ProductItem = ({
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={onSubmitInquiry}>Inquire</Button>
+        <Button
+          disabled={infoData.fullName === "" || infoData.address === ""}
+          onClick={onSubmitInquiry}
+        >
+          Inquire
+        </Button>
         <Button onClick={handleCloseInquireModal} className="btn btn-primary">
           Cancel
         </Button>
@@ -345,7 +370,7 @@ const ProductItem = ({
           </Form.Group>
           <Button
             type="submit"
-            disabled={editData.priceFrom > editData.priceTo}
+            disabled={Number(editData.priceFrom) >= Number(editData.priceTo)}
             className="btn btn-primary"
           >
             Save Changes
@@ -425,6 +450,7 @@ const ProductItem = ({
                 Inquire
               </Button>
               {inquireMotor}
+              {viewRandomCode}
 
               <Button onClick={onDeleteProduct} className="btn btn-danger">
                 Delete
@@ -462,12 +488,15 @@ ProductItem.propTypes = {
   product: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   addInquiry: PropTypes.func.isRequired,
-  toggleIsAvailable: PropTypes.func.isRequired
+  toggleIsAvailable: PropTypes.func.isRequired,
+  errors: PropTypes.object.isRequired
 };
 
 const mapStateToPros = state => ({
   product: state.product,
-  auth: state.auth
+  auth: state.auth,
+  inquiry: state.inquiry,
+  errors: state.errors
 });
 
 export default connect(

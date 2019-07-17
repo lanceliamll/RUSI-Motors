@@ -1,5 +1,11 @@
 import axios from "axios";
-import { GET_ERRORS, GET_INQUIRIES, GET_INQUIRY } from "./types";
+import {
+  GET_ERRORS,
+  GET_INQUIRIES,
+  GET_INQUIRY,
+  GET_INQUIRYCODE,
+  STORE_INQUIRY
+} from "./types";
 
 export const getInquiries = () => async dispatch => {
   try {
@@ -57,7 +63,28 @@ export const deleteInquiry = id => async dispatch => {
 
 export const addInquiry = inquiryData => async dispatch => {
   try {
-    await axios.post("/api/inquiry/create", inquiryData);
+    let res = await axios.post("/api/inquiry/create", inquiryData);
+
+    dispatch({
+      type: STORE_INQUIRY,
+      payload: res.data
+    });
+  } catch (error) {
+    dispatch({
+      type: GET_ERRORS,
+      payload: error.response.data
+    });
+  }
+};
+
+export const getInquiryCode = id => async dispatch => {
+  try {
+    let res = await axios.get(`/api/inquiry/${id}`);
+
+    dispatch({
+      type: GET_INQUIRYCODE,
+      payload: res.data
+    });
   } catch (error) {
     dispatch({
       type: GET_ERRORS,

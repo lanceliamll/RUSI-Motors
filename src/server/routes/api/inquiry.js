@@ -3,6 +3,7 @@ const router = express.Router();
 const authorized = require("../../middleware/authorized");
 const Inquiry = require("../../models/Inquiry");
 const uuidv4 = require("uuid/v4");
+const validateInquiryInput = require("../../validation/inquireMotor");
 
 //@ROUTE          localhost:5000/api/inquiry
 //@DESCRIPTION    query all inquiries
@@ -15,6 +16,24 @@ router.get("/", authorized, async (req, res) => {
       return res.json({ message: "No inquiries found!" });
     }
     res.json(inquiries);
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+});
+
+//@ROUTE          localhost:5000/api/inquiry/:id/
+//@DESCRIPTION    get inquiry by id
+//@ACCESS         private
+router.get("/:id", authorized, async (req, res) => {
+  const { id } = req.params;
+  try {
+    let inquiry = await Inquiry.findById(id);
+
+    if (!inquiry) {
+      return res.status(404).json({ message: "Inquiry not found" });
+    }
+
+    res.json(inquiry);
   } catch (error) {
     res.status(500).json({ message: "Server Error" });
   }
@@ -36,7 +55,7 @@ router.get("/code/:randomCode", authorized, async (req, res) => {
 
     res.json(inquiryByCode);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Server Error" });
   }
 });
 
@@ -44,6 +63,12 @@ router.get("/code/:randomCode", authorized, async (req, res) => {
 //@DESCRIPTION    create a inquiry
 //@ACCESS         private
 router.post("/create", authorized, async (req, res) => {
+  const { isValid, errors } = validateInquiryInput(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const { fullName, address, motorModel } = req.body;
   const { id } = req.user;
 
