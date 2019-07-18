@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { logoutUser } from "../../actions/authActions";
 import Rusi1 from "../../static/Rusi1.png";
+import "./Layout.css";
 
 class Navigation extends Component {
   logout = () => {
@@ -59,7 +60,7 @@ class Navigation extends Component {
     );
 
     return (
-      <>
+      <div>
         <Navbar bg="dark" variant="dark">
           <Navbar.Brand>
             <Link to="/">
@@ -75,7 +76,7 @@ class Navigation extends Component {
             {isAuthenticated ? authLinks : guestLinks}
           </Nav>
         </Navbar>
-      </>
+      </div>
     );
   }
 }

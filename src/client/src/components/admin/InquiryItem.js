@@ -10,6 +10,7 @@ const InquiryItem = ({
   deleteInquiry
 }) => {
   const [handleShowEditModal, setHandleShowEditModal] = useState(false);
+  const [handleShowViewModal, setHandleShowViewModal] = useState(false);
   const [editData, setEditData] = useState({
     randomCode: "",
     fullName: "",
@@ -32,6 +33,14 @@ const InquiryItem = ({
 
   let showModal = () => {
     setHandleShowEditModal(true);
+  };
+
+  let showViewModal = () => {
+    setHandleShowViewModal(true);
+  };
+
+  let hideViewModal = () => {
+    setHandleShowViewModal(false);
   };
 
   let onChange = e => {
@@ -60,8 +69,8 @@ const InquiryItem = ({
 
     if (confirm) {
       deleteInquiry(_id);
+      window.location.reload();
     }
-    window.location.reload();
   };
 
   let editModal = (
@@ -129,6 +138,71 @@ const InquiryItem = ({
     </Modal>
   );
 
+  let viewModal = (
+    <Modal
+      onHide={hideViewModal}
+      show={handleShowViewModal}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          View Inquiry Transaction
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group>
+            <Form.Label>Random Code</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Random Code"
+              disabled
+              name="randomCode"
+              value={randomCode}
+            />
+
+            <Form.Label>Full Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Full Name"
+              name="fullName"
+              disabled
+              value={editData.fullName}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Address</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Address"
+              name="address"
+              disabled
+              value={editData.address}
+              onChange={e => onChange(e)}
+            />
+
+            <Form.Label>Motor Model</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Motor Model"
+              name="motorModel"
+              disabled
+              value={editData.motorModel}
+              onChange={e => onChange(e)}
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={hideViewModal} className="btn btn-danger">
+          Close
+        </Button>
+      </Modal.Footer>
+    </Modal>
+  );
+
   return (
     <Fragment>
       <tr>
@@ -138,6 +212,8 @@ const InquiryItem = ({
           <Fragment>
             <Button onClick={showModal}>Edit</Button>
             {editModal}
+            <Button onClick={showViewModal}>View</Button>
+            {viewModal}
             <Button className="btn btn-danger" onClick={onDeleteInquiry}>
               Delete
             </Button>

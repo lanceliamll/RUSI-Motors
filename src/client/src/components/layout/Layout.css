@@ -43,7 +43,7 @@
   color: rgb(173, 173, 6);
 }
 .landingpage-content {
-  height: 75vh;
+  height: 50vh;
 }
 
 .content-text {
@@ -53,4 +53,9 @@
 
 .test {
   height: 100vh;
+}
+
+.navigation {
+  position: fixed;
+  z-index: 1000;
 }

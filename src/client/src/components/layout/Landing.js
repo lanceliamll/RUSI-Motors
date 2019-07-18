@@ -42,26 +42,21 @@ class Landing extends Component {
               <Row>
                 <Col md={{ span: 4 }}>
                   <p className="content-text">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Ipsum, deleniti! Veniam molestiae ratione eius accusantium
-                    reiciendis ad cumque nesciunt aliquam harum, dolores
-                    doloremque illo, dolorem tempore magnam beatae! Atque, quis!
+                    Philippine most love motorcycle brand. Products were build
+                    with dedication and hardwork.
                   </p>
                 </Col>
                 <Col md={{ span: 4 }}>
                   <p className="content-text">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Nihil consequatur, doloribus libero iste optio magnam
-                    provident, illum vero, odio culpa assumenda amet sint
-                    voluptatem? Dignissimos perspiciat
+                    The Rusi Motorcycles first goal is to bring the best
+                    satisfaction that the customer have. Offering powerful
+                    motorcycles that can compete with the best .
                   </p>
                 </Col>
                 <Col md={{ span: 4 }}>
                   <p className="content-text">
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    Nihil consequatur, doloribus libero iste optio magnam
-                    provident, illum vero, odio culpa assumenda amet sint
-                    voluptatem? Dignissimos perspiciat
+                    Inquire online to value your time and to get the great
+                    experience.
                   </p>
                 </Col>
               </Row>
