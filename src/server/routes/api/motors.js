@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Motor = require("../../models/Motor");
 const authorized = require("../../middleware/authorized");
+const validateAddMotor = require("../../validation/addMotor");
 
 //@ROUTE          localhost:5000/api/motors
 //@DESCRIPTION    query all motors
@@ -65,6 +66,12 @@ router.get("/model/:motorModel", authorized, async (req, res) => {
 //@DESCRIPTION    create a motor
 //@ACCESS         private
 router.post("/create", authorized, async (req, res) => {
+  const { isValid, errors } = validateAddMotor(req.body);
+
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
   const {
     priceFrom,
     priceTo,

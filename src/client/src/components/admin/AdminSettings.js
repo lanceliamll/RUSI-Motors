@@ -12,6 +12,8 @@ class AdminSettings extends Component {
     this.state = {
       motorModel: "",
       image: "",
+      priceFrom: "",
+      priceTo: "",
       type: "",
       height: "",
       weight: "",
@@ -41,9 +43,12 @@ class AdminSettings extends Component {
   };
 
   onSubmit = e => {
+    e.preventDefault();
     const {
       motorModel,
       image,
+      priceFrom,
+      priceTo,
       type,
       height,
       weight,
@@ -51,9 +56,10 @@ class AdminSettings extends Component {
       length
     } = this.state;
     const { addProduct } = this.props;
-    e.preventDefault();
     let newProduct = {
       motorModel,
+      priceFrom,
+      priceTo,
       image,
       type,
       height,
@@ -65,13 +71,16 @@ class AdminSettings extends Component {
     this.setState({
       motorModel: "",
       image: "",
+      priceFrom: "",
+      priceTo: "",
       type: "",
       height: "",
       weight: "",
       width: "",
-      length: ""
+      length: "",
+      errors: {}
     });
-    window.location.reload();
+    // window.location.reload();
   };
 
   onChange = e => {
@@ -94,12 +103,15 @@ class AdminSettings extends Component {
     const {
       motorModel,
       image,
+      priceFrom,
+      priceTo,
       type,
       height,
       weight,
       width,
       length,
-      randomCode
+      randomCode,
+      errors
     } = this.state;
     return (
       <div className="container">
@@ -117,20 +129,56 @@ class AdminSettings extends Component {
                     <Form.Label>Motor Model</Form.Label>
                     <Form.Control
                       type="text"
+                      className={
+                        errors && errors.motorModel ? "is-invalid" : ""
+                      }
                       placeholder="Motor Model"
                       name="motorModel"
                       value={motorModel}
                       onChange={this.onChange}
                     />
+                    <Form.Text className="text-danger">
+                      {errors && <p>{errors.motorModel}</p>}
+                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group>
                     <Form.Label>Image</Form.Label>
                     <Form.Control
                       type="text"
+                      className={
+                        errors && errors.motorModel ? "is-invalid" : ""
+                      }
                       placeholder="Image"
                       name="image"
                       value={image}
+                      onChange={this.onChange}
+                    />
+                    <Form.Text className="text-danger">
+                      {errors && <p>{errors.image}</p>}
+                    </Form.Text>
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label>Price From</Form.Label>
+                    <Form.Control
+                      type="number"
+                      className={priceFrom < 1 ? "is-invalid" : ""}
+                      placeholder="Price From"
+                      name="priceFrom"
+                      value={priceFrom}
+                      onChange={this.onChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group>
+                    <Form.Label>Price To</Form.Label>
+                    <Form.Control
+                      type="number"
+                      className={priceTo < 1 ? "is-invalid" : ""}
+                      placeholder="Price To"
+                      name="priceTo"
+                      value={priceTo}
                       onChange={this.onChange}
                     />
                   </Form.Group>
@@ -139,58 +187,86 @@ class AdminSettings extends Component {
                     <Form.Label>Type</Form.Label>
                     <Form.Control
                       type="text"
+                      className={errors && errors.type ? "is-invalid" : ""}
                       placeholder="Type"
                       name="type"
                       value={type}
                       onChange={this.onChange}
                     />
+                    <Form.Text className="text-danger">
+                      {errors && <p>{errors.type}</p>}
+                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group>
                     <Form.Label>Height</Form.Label>
                     <Form.Control
                       type="text"
+                      className={errors && errors.height ? "is-invalid" : ""}
                       placeholder="Height"
                       name="height"
                       value={height}
                       onChange={this.onChange}
                     />
+                    <Form.Text className="text-danger">
+                      {errors && <p>{errors.height}</p>}
+                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group>
                     <Form.Label>Weight</Form.Label>
                     <Form.Control
                       type="text"
+                      className={errors && errors.weight ? "is-invalid" : ""}
                       placeholder="Weight"
                       name="weight"
                       value={weight}
                       onChange={this.onChange}
                     />
+                    <Form.Text className="text-danger">
+                      {errors && <p>{errors.weight}</p>}
+                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group>
                     <Form.Label>Width</Form.Label>
                     <Form.Control
                       type="text"
+                      className={errors && errors.width ? "is-invalid" : ""}
                       placeholder="Width"
                       name="width"
                       value={width}
                       onChange={this.onChange}
                     />
+                    <Form.Text className="text-danger">
+                      {errors && <p>{errors.width}</p>}
+                    </Form.Text>
                   </Form.Group>
 
                   <Form.Group>
                     <Form.Label>Length</Form.Label>
                     <Form.Control
                       type="text"
+                      className={errors && errors.length ? "is-invalid" : ""}
                       placeholder="Length"
                       name="length"
                       value={length}
                       onChange={this.onChange}
                     />
+                    <Form.Text className="text-danger">
+                      {errors && <p>{errors.length}</p>}
+                    </Form.Text>
                   </Form.Group>
 
-                  <Button variant="primary" type="submit">
+                  <Button
+                    variant="primary"
+                    disabled={
+                      Number(priceFrom) >= Number(priceTo) ||
+                      Number(priceFrom) < 1 ||
+                      Number(priceTo) < 1
+                    }
+                    type="submit"
+                  >
                     Add Motor
                   </Button>
                 </Form>
@@ -278,7 +354,8 @@ AdminSettings.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  inquiry: state.inquiry
+  inquiry: state.inquiry,
+  errors: state.errors
 });
 
 export default connect(
