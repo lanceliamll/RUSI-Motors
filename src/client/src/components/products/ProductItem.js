@@ -6,6 +6,7 @@ import { addInquiry } from "../../actions/inquiryActions";
 import {
   deleteProduct,
   editProduct,
+  getProducts,
   toggleIsAvailable
 } from "../../actions/productActions";
 import phPrice from "./PhPrice";
@@ -13,6 +14,7 @@ import phPrice from "./PhPrice";
 const ProductItem = ({
   editProduct,
   addInquiry,
+  getProducts,
   deleteProduct,
   toggleIsAvailable,
   products,
@@ -102,26 +104,30 @@ const ProductItem = ({
     });
   };
 
-  const onDeleteProduct = () => {
-    const confirm = window.confirm(
+  const onDeleteProduct = async () => {
+    const confirm = await window.confirm(
       "Are you sure you want to delete this item?"
     );
     if (confirm) {
-      deleteProduct(products._id);
-      window.location.reload();
+      await deleteProduct(products._id);
+      await getProducts();
+      // window.location.reload();
     }
   };
 
-  const onToggleAvailable = () => {
-    const confirm = window.confirm("Are you sure you wanted to continue?");
+  const onToggleAvailable = async e => {
+    e.preventDefault();
+    const confirm = await window.confirm(
+      "Are you sure you wanted to continue?"
+    );
 
     if (confirm) {
-      toggleIsAvailable(products._id);
+      await toggleIsAvailable(products._id);
     }
-    window.location.reload();
+    await getProducts();
   };
 
-  const onSubmit = e => {
+  const onSubmit = async e => {
     e.preventDefault();
 
     const {
@@ -147,8 +153,11 @@ const ProductItem = ({
       length
     };
 
-    editProduct(editedData, products._id);
-    window.location.reload();
+    await editProduct(editedData, products._id);
+    // window.location.reload();
+    //Try to Refetch the products
+    await getProducts();
+    await handleCloseEditModal();
   };
 
   const onSubmitInquiry = async e => {
@@ -166,11 +175,13 @@ const ProductItem = ({
     await setInfoData({ fullName: "", address: "" });
 
     if (!infoData.errors) {
-      setShowCodeModal(true);
-      setShowInquireMotor(false);
+      await setShowInquireMotor(false);
     } else {
-      setShowInquireMotor(true);
+      await setShowInquireMotor(true);
     }
+
+    await setShowCodeModal(true);
+    await setShowInquireMotor(false);
 
     // setShowInquireMotor(false);
     // handleShowCodeModal();
@@ -489,6 +500,7 @@ ProductItem.propTypes = {
   auth: PropTypes.object.isRequired,
   addInquiry: PropTypes.func.isRequired,
   toggleIsAvailable: PropTypes.func.isRequired,
+  getProducts: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 
@@ -501,5 +513,5 @@ const mapStateToPros = state => ({
 
 export default connect(
   mapStateToPros,
-  { editProduct, deleteProduct, toggleIsAvailable, addInquiry }
+  { editProduct, deleteProduct, toggleIsAvailable, addInquiry, getProducts }
 )(ProductItem);

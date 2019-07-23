@@ -2,11 +2,20 @@ import PropTypes from "prop-types";
 import React, { Fragment, useEffect, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
-import { deleteInquiry, editInquiry } from "../../actions/inquiryActions";
+import {
+  deleteInquiry,
+  editInquiry,
+  getInquiries,
+  getInquiry,
+  getInquiryCode
+} from "../../actions/inquiryActions";
 
 const InquiryItem = ({
   inquiries: { _id, randomCode, fullName, address, motorModel },
   editInquiry,
+  getInquiries,
+  getInquiry,
+  getInquiryCode,
   deleteInquiry
 }) => {
   const [handleShowEditModal, setHandleShowEditModal] = useState(false);
@@ -47,7 +56,7 @@ const InquiryItem = ({
     setEditData({ ...editData, [e.target.name]: e.target.value });
   };
 
-  let onSubmit = e => {
+  let onSubmit = async e => {
     e.preventDefault();
     const { randomCode, fullName, address, motorModel } = editData;
 
@@ -58,19 +67,20 @@ const InquiryItem = ({
       motorModel
     };
 
-    editInquiry(newData, _id);
-    window.location.reload();
+    await editInquiry(newData, _id);
+    await getInquiries();
+    await hideModal();
   };
 
-  let onDeleteInquiry = () => {
-    let confirm = window.confirm(
+  let onDeleteInquiry = async () => {
+    let confirm = await window.confirm(
       "Are you sure you wanted to delete this item ?"
     );
 
     if (confirm) {
-      deleteInquiry(_id);
-      window.location.reload();
+      await deleteInquiry(_id);
     }
+    await getInquiries();
   };
 
   let editModal = (
@@ -227,7 +237,10 @@ const InquiryItem = ({
 InquiryItem.propTypes = {
   inquiry: PropTypes.object.isRequired,
   editInquiry: PropTypes.func.isRequired,
-  deleteInquiry: PropTypes.func.isRequired
+  deleteInquiry: PropTypes.func.isRequired,
+  getInquiries: PropTypes.object.isRequired,
+  getInquiry: PropTypes.object.isRequired,
+  getInquiryCode: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -236,5 +249,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { editInquiry, deleteInquiry }
+  { editInquiry, deleteInquiry, getInquiries, getInquiry, getInquiryCode }
 )(InquiryItem);
