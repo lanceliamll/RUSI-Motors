@@ -8,6 +8,7 @@ import Register from "./components/auth/Register";
 import Footer from "./components/layout/Footer";
 import Landing from "./components/layout/Landing";
 import Navigation from "./components/layout/Navigation";
+import NotFound from "./components/NotFound";
 import Products from "./components/products/Products";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import setAuthToken from "./helpers/setAuthToken";
@@ -31,19 +32,22 @@ class App extends Component {
           <div className="App">
             <Fragment>
               <Navigation />
-              <Route exact path="/" component={Landing} />
-              <div>
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/register" component={Register} />
-                <Switch>
-                  <PrivateRoute exact path="/products" component={Products} />
-                  <PrivateRoute
-                    exact
-                    path="/adminsettings"
-                    component={AdminSettings}
-                  />
-                </Switch>
-              </div>
+              <Switch>
+                <Route exact path="/" component={Landing} />
+                <div>
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/register" component={Register} />
+                  <Switch>
+                    <PrivateRoute exact path="/products" component={Products} />
+                    <PrivateRoute
+                      exact
+                      path="/adminsettings"
+                      component={AdminSettings}
+                    />
+                    <Route component={NotFound} />
+                  </Switch>
+                </div>
+              </Switch>
               <Footer />
             </Fragment>
           </div>

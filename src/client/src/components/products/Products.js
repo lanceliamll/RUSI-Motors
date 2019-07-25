@@ -73,6 +73,7 @@ class Products extends Component {
                       ))}
                     </Fragment>
                   ) : (
+                    // Search Functionality if the Product State is present
                     <Fragment>
                       {product ? (
                         <Fragment>

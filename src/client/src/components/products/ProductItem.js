@@ -460,6 +460,7 @@ const ProductItem = ({
               >
                 Inquire
               </Button>
+
               {inquireMotor}
               {viewRandomCode}
 
@@ -478,12 +479,17 @@ const ProductItem = ({
                 </Button>
                 {viewMotor}
 
-                <Button
-                  onClick={handleShowInquireModal}
-                  className="btn btn-primary"
-                >
-                  Inquire
-                </Button>
+                {products.isAvailable ? (
+                  <Button
+                    onClick={handleShowInquireModal}
+                    className="btn btn-primary"
+                  >
+                    Inquire
+                  </Button>
+                ) : (
+                  <></>
+                )}
+
                 {inquireMotor}
                 {viewRandomCode}
               </div>
